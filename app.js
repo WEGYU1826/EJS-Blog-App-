@@ -17,7 +17,10 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 let posts = [];
 
 app.get("/" , (req ,res) => {
-    res.render("home" , {homeConstant: homeStartingContent , post: posts});
+    res.render("home" , {
+        homeConstant: homeStartingContent , 
+        post: posts
+    });
 })
 
 app.get("/about" , (req , res) => {
@@ -32,23 +35,6 @@ app.get("/compose" ,(req , res) =>{
     res.render("compose"); 
 })
 
-// Express routh parameters
-
-app.get("/posts/:postID", (req, res) => {
-    let postID = _.lowerCase(req.params.postID);
-    posts.forEach((post) =>{
-        var postTitle = _.lowerCase(post.postTitle);
-
-        if(postID === postTitle){
-            res.render("post", {postTitle: post.postTitle , postContent: post.postContent});
-        }
-    })
-    
-    
-})
-
-
-
 app.post("/compose" ,(req ,res) => {
     
     const post = {
@@ -57,6 +43,22 @@ app.post("/compose" ,(req ,res) => {
     };
     posts.push(post);
     res.redirect("/");
+})
+
+// Express routh parameters
+app.get("/posts/:postID", (req, res) => {
+    const postID = _.lowerCase(req.params.postID);
+    posts.forEach((post) =>{
+        const postTitle = _.lowerCase(post.postTitle);
+
+        if(postTitle === postID){
+            res.render("post", {
+                title: post.postTitle , 
+                content: post.postContent
+            });
+        }
+    });
+      
 })
 
 app.listen(port, () => {
